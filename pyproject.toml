@@ -28,3 +28,7 @@ dependencies = [
 ]
 [project.scripts]
 rizz = "rizz.main:main"
+
+
+[tool.hatch.metadata]
+allow-direct-references = true
