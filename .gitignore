@@ -1,0 +1,8 @@
+result
+__pycache__
+dist
+.direnv/
+resources/default.mp4
+audio.wav
+video.mp4
+.env
