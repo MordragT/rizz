@@ -253,6 +253,8 @@
             # scipy
             # sentencepiece # for speecht5
             # datasets # for speecht5
+            pyproject-parser # for validation
+            consolekit # needed for pyporject-parser
           ];
 
           buildInputs = with pkgs; [

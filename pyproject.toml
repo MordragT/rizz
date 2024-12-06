@@ -10,7 +10,7 @@ version = "0.1.0"
 authors = [{ name = "Max Mustermann", email = "mail@example.com" }]
 maintainers = []
 description = ""
-readme = "README.md"
+readme = "readme.md"
 keywords = []
 license = { text = "MIT License" }
 
