@@ -21,7 +21,7 @@ dependencies = [
     "moviepy",
     "gradio",
     "transformers",
-    "parler-tts",
+    "parler-tts @ git+ssh://git@github.com/huggingface/parler-tts",
     "torch",
     "torchaudio",
     "python-dotenv",
