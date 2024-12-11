@@ -10,8 +10,9 @@ from moviepy.video.fx.HeadBlur import HeadBlur
 from moviepy.audio.io.AudioFileClip import AudioFileClip
 
 class MovieEngine:
-    def __init__(self, df, audio, video, config):
+    def __init__(self, df, source, audio, video, config):
         self.df = df
+        self.source = source
         self.audio = audio
         self.video = video
         self.resources = config.resources
@@ -34,13 +35,19 @@ class MovieEngine:
                 blur_intensity = gr.Number(4.0, label="Blur Intensity")
 
             with gr.Column():
-                in_video = gr.Video(value=self.resources / "default.mp4", label="Input Video")
+                video_width = gr.Number(1080, label="Target Video Width")
+                video_height = gr.Number(1920, label="Target Video Height")
+                video_select = gr.FileExplorer(file_count="single", root_dir=self.resources / "videos", value="default.mp4", label="Video Selection")
+                in_video = gr.Video(value=lambda f : self.resources / "videos" / f, inputs=video_select, label="Input Video")
 
         submit = gr.Button("Render Video")
 
         def on_submit(
                 df: pd.DataFrame,
+                s,
                 in_video,
+                video_width,
+                video_height,
                 text_width,
                 text_height,
                 text_margin_x,
@@ -59,7 +66,7 @@ class MovieEngine:
 
             progress = 0
             text_clips = []
-            for text, duration in zip(df["body"].values, df["duration"].values):
+            for text, duration in zip(df[s].values, df["duration"].values):
                 text_clip = TextClip(
                     text=text,
                     text_align=text_align,
@@ -79,7 +86,7 @@ class MovieEngine:
             if blur:
                 effects.append(HeadBlur(fx=lambda _ : blur_x, fy=lambda _ : blur_y, radius=blur_radius, intensity=blur_intensity))
         
-            video_clip = VideoFileClip(in_video).with_effects(effects)
+            video_clip = VideoFileClip(in_video, target_resolution=(video_width, video_height)).with_effects(effects)
 
             audio_clip = AudioFileClip("audio.wav")
             video = CompositeVideoClip([video_clip] + text_clips).with_audio(audio_clip)
@@ -97,7 +104,10 @@ class MovieEngine:
         
         submit.click(on_submit, [
             self.df,
+            self.source,
             in_video,
+            video_width,
+            video_height,
             text_width,
             text_height,
             text_margin_x,

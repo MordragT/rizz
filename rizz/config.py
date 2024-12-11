@@ -15,3 +15,5 @@ class RizzConfig:
         resources = Path(__file__).parent.parent.resolve() / "resources"
         dtype = torch.bfloat16
         device = device()
+
+        print(f"Using device: {device}")

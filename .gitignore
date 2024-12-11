@@ -2,7 +2,7 @@ result
 __pycache__
 dist
 .direnv/
-resources/default.mp4
+resources/videos/
 audio.wav
 video.mp4
 .env

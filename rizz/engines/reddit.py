@@ -1,5 +1,6 @@
 import praw
 import gradio as gr
+import pandas as pd
 import os
 
 SUBREDDIT = "beta"
@@ -172,7 +173,7 @@ class RedditEngine:
             submission = self.reddit.submission(id)
             comments = [[c.author(), c.score(), c.body()] for c in submission.comments(n, sort_by)]
             table = [[submission.author(), submission.score(), submission.title()]] + comments
-            return gr.update(value=table)
+            return pd.DataFrame.from_records(table, columns=["author", "score", "body"])
         submit.click(on_submit, [submission, comments_count, comments_sort_by], self.df)
 
         # def on_change(i, submissions):

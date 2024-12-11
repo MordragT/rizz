@@ -236,6 +236,7 @@
           dependencies = with pythonPkgs; [
             # Python dependencies
             numpy
+            pandas
             praw
             moviepy
             gradio
@@ -243,11 +244,15 @@
             parler-tts
             torch
             torchaudio
+            accelerate # for bark
+            optimum
             ipex
+            triton-xpu
+            bitsandbytes
             python-dotenv
-            # optimum
+            outlines # structured text generation
+            pydantic
             # gguf
-            # accelerate
             # spacy-transformers
             # pip # for download spacy
             # scipy
@@ -261,11 +266,14 @@
             espeak
             imagemagick
             # sentencepiece
+            # spirv-headers
           ];
         };
       };
       devShells.default = pkgs.mkShell {
         inputsFrom = [self.packages.${system}.default];
+
+        # CXX = "${pkgs.intel-dpcpp.llvm}/bin/icpx";
 
         LD_LIBRARY_PATH = pkgs.lib.makeLibraryPath (with pkgs; [
           espeak
