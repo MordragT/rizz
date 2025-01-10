@@ -22,35 +22,31 @@ class ParlerEngine:
             repo_id,
             torch_dtype=config.dtype,
             # attn_implementation="sdpa",
-            # attn_implementation="eager",
+            attn_implementation="eager",
         )
         self.sampling_rate = self.model.audio_encoder.config.sampling_rate
 
         footprint = self.model.get_memory_footprint() / 1024 / 1024
         print(f"Parler Memory Footprint: {footprint}")
 
-        print(torch._dynamo.list_backends())
+        # print(torch._dynamo.list_backends())
 
-        # # TODO maybe works on Leon's machine
-        # # compile the forward pass
+        # # # TODO maybe works on Leon's machine
+        # # # compile the forward pass
+        # self.model.generation_config.cache_implementation = "static"
         # self.model.to(self.device)
-        self.model.generation_config.cache_implementation = "static"
+        # self.model.forward = torch.compile(self.model.forward)
 
-        # options={ "trace.enabled": True }
-        self.model.to(self.device)
-        self.model.forward = torch.compile(self.model.forward)
-        # self.model.forward = torch.compile(self.model.forward, mode="default", backend="inductor")
+        # # warmup
+        # inputs = self.tokenizer("Warmup", return_tensors="pt").to(self.device)
 
-        # warmup
-        inputs = self.tokenizer("Warmup", return_tensors="pt").to(self.device)
-
-        _ = self.model.generate(
-            input_ids=inputs.input_ids,
-            attention_mask=inputs.attention_mask,
-            prompt_input_ids=inputs.input_ids,
-            prompt_attention_mask=inputs.attention_mask,
-        )
-        self.model.cpu()
+        # _ = self.model.generate(
+        #     input_ids=inputs.input_ids,
+        #     attention_mask=inputs.attention_mask,
+        #     prompt_input_ids=inputs.input_ids,
+        #     prompt_attention_mask=inputs.attention_mask,
+        # )
+        # self.model.cpu()
 
 
     def render(self):
