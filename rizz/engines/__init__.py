@@ -1,6 +1,7 @@
 from .bark import BarkEngine
 from .concatenator import ConcatenatorEngine
 from .editor import EditorEngine
+from .ov_generator import OvGeneratorEngine
 from .generator import GeneratorEngine
 from .movie import MovieEngine
 from .normalizer import NormalizerEngine

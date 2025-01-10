@@ -2,7 +2,7 @@ import io
 import torch
 import gradio as gr
 import pandas as pd
-import intel_extension_for_pytorch as ipex
+# import intel_extension_for_pytorch as ipex
 from transformers import AutoTokenizer, set_seed
 from torchaudio.io import StreamWriter
 from parler_tts import ParlerTTSForConditionalGeneration
@@ -29,27 +29,28 @@ class ParlerEngine:
         footprint = self.model.get_memory_footprint() / 1024 / 1024
         print(f"Parler Memory Footprint: {footprint}")
 
-        # print(torch._dynamo.list_backends())
+        print(torch._dynamo.list_backends())
 
         # # TODO maybe works on Leon's machine
         # # compile the forward pass
         # self.model.to(self.device)
-        # self.model.generation_config.cache_implementation = "static"
+        self.model.generation_config.cache_implementation = "static"
 
         # options={ "trace.enabled": True }
+        self.model.to(self.device)
+        self.model.forward = torch.compile(self.model.forward)
         # self.model.forward = torch.compile(self.model.forward, mode="default", backend="inductor")
 
-        # # warmup
-        # inputs = self.tokenizer("Warmup", return_tensors="pt").to(self.device)
+        # warmup
+        inputs = self.tokenizer("Warmup", return_tensors="pt").to(self.device)
 
-        # self.model.to(self.device)
-        # _ = self.model.generate(
-        #     input_ids=inputs.input_ids,
-        #     attention_mask=inputs.attention_mask,
-        #     prompt_input_ids=inputs.input_ids,
-        #     prompt_attention_mask=inputs.attention_mask,
-        # )
-        # self.model.cpu()
+        _ = self.model.generate(
+            input_ids=inputs.input_ids,
+            attention_mask=inputs.attention_mask,
+            prompt_input_ids=inputs.input_ids,
+            prompt_attention_mask=inputs.attention_mask,
+        )
+        self.model.cpu()
 
 
     def render(self):
@@ -73,8 +74,8 @@ class ParlerEngine:
             self.model.to(self.device)
             self.model.eval()
 
-            if self.device == "xpu":
-                self.model = ipex.optimize(self.model, dtype=self.dtype)
+            # if self.device == "xpu":
+            #     self.model = ipex.optimize(self.model, dtype=self.dtype)
 
             speaker_inputs = self.tokenizer(speaker_prompt, return_tensors="pt").to(self.device)
 
@@ -103,7 +104,7 @@ class ParlerEngine:
                     attention_mask = speaker_inputs.attention_mask.expand(prompt_inputs.attention_mask.size(0), -1)
 
                     set_seed(0)
-                    with torch.inference_mode(), torch.amp.autocast(self.device, dtype=self.dtype):
+                    with torch.inference_mode():
                         outputs = self.model.generate(
                             prompt_input_ids=prompt_inputs.input_ids,
                             prompt_attention_mask=prompt_inputs.attention_mask,
