@@ -21,7 +21,7 @@ class ParlerEngine:
         self.model = ParlerTTSForConditionalGeneration.from_pretrained(
             repo_id,
             torch_dtype=config.dtype,
-            attn_implementation="sdpa",
+            # attn_implementation="sdpa",
             # attn_implementation="eager",
         )
         self.sampling_rate = self.model.audio_encoder.config.sampling_rate
