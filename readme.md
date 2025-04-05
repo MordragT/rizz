@@ -2,7 +2,7 @@
 
 # ❄️ nix-template-python ⚕️
 
-[![NixOS](https://img.shields.io/badge/Made_for-Python-blue.svg?logo=python&style=for-the-badge)](https://www.python.org/) [![NixOS](https://img.shields.io/badge/Flakes-Nix-informational.svg?logo=nixos&style=for-the-badge)](https://nixos.org) ![License](https://img.shields.io/github/license/mordragt/nix-templates?style=for-the-badge) 
+[![NixOS](https://img.shields.io/badge/Made_for-Python-blue.svg?logo=python&style=for-the-badge)](https://www.python.org/) [![NixOS](https://img.shields.io/badge/Flakes-Nix-informational.svg?logo=nixos&style=for-the-badge)](https://nixos.org) ![License](https://img.shields.io/github/license/mordragt/nix-templates?style=for-the-badge)
 
 
 Minimal **Python** development template for **Nix**
@@ -26,6 +26,12 @@ nix flake init -t github:MordragT/nix-templates#python
 
 - `nix develop`: opens up a `bash` shell with the declared python packages
 - `nix build`: builds your python application
+
+## Benches
+
+| Torch-Version | Ipex-Version | Model | Max-Tokens | Time |
+|:-------------:|:------------:|:-----:|:----------:|:----:|
+| 2.6 (stock) | 2.6.10+xpu | Qwen 2.5-3B | 512 | 275sec |
 
 ## Reference
 

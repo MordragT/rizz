@@ -2,10 +2,11 @@
 import logging
 from dotenv import load_dotenv
 
-try:
-    import intel_extension_for_pytorch as ipex
-except:
-    pass
+# try:
+#     import torch
+#     import intel_extension_for_pytorch as ipex
+# except:
+#     pass
 
 from .app import RizzApp
 from .config import RizzConfig

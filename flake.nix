@@ -24,7 +24,6 @@
       pythonPkgs = python.pkgs;
       dependencies = p:
         with p; [
-          # Python dependencies
           numpy
           pandas
           praw
@@ -40,23 +39,15 @@
           # optimum
 
           ipex
-          bitsandbytes
+          # bitsandbytes
           python-dotenv
           outlines # structured text generation
           pydantic
-          # gguf
-          # spacy-transformers
-          # pip # for download spacy
-          # scipy
-          # sentencepiece # for speecht5
-          # datasets # for speecht5
-          pyproject-parser # for validation
-          consolekit # needed for pyporject-parser
           triton-xpu
-          huggingface-hub
-          inquirerpy # for huggingface-hub cli
 
-          # pybind11 # for onnx ?
+          # huggingface cli
+          huggingface-hub
+          huggingface-hub.optional-dependencies.cli
         ];
       # ++ optimum.optional-dependencies.exporters
       # ++ optimum-intel.optional-dependencies.openvino;

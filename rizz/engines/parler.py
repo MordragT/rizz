@@ -21,8 +21,8 @@ class ParlerEngine:
         self.model = ParlerTTSForConditionalGeneration.from_pretrained(
             repo_id,
             torch_dtype=config.dtype,
-            # attn_implementation="sdpa",
-            attn_implementation="eager",
+            attn_implementation="sdpa",
+            # attn_implementation="eager",
         )
         self.sampling_rate = self.model.audio_encoder.config.sampling_rate
 
@@ -110,7 +110,7 @@ class ParlerEngine:
                             do_sample=do_sample,
                             temperature=temperature,
                         )
-                    
+
                     sequence_lengths = outputs.audios_length
                     for i, length in enumerate(sequence_lengths):
                         chunk = outputs.sequences[i, :length].unsqueeze(1).float().cpu()
@@ -136,4 +136,3 @@ class ParlerEngine:
             max_length,
             batch_size,
         ], [self.df, self.audio])
-

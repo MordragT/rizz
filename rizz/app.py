@@ -2,10 +2,10 @@ import torch
 import gradio as gr
 import pandas as pd
 
-try:
-    import intel_extension_for_pytorch as ipex
-except:
-    pass
+# try:
+#     import intel_extension_for_pytorch as ipex
+# except:
+#     pass
 
 from .engines import EditorEngine, BarkEngine, ConcatenatorEngine, GeneratorEngine, RedditEngine, NormalizerEngine, ParaphraserEngine, TikTokEngine, MovieEngine, VitsEngine, ParlerEngine, YoutubeEngine
 
@@ -35,7 +35,7 @@ class RizzApp:
 
         def on_tick():
             if self.config.device == "xpu":
-                free, total = ipex.xpu.mem_get_info()
+                free, total = torch.xpu.mem_get_info()
                 return f"Free Memory: {free}\nTotal Memory: {total}"
             elif self.config.device == "cuda":
                 free, total = torch.cuda.mem_get_info()
@@ -64,7 +64,7 @@ class RizzApp:
                 editor.render()
 
             df.change(on_change, inputs=df, outputs=source)
-            df.render()   
+            df.render()
             source.render()
 
             with gr.Tab("Parler TTS"):
@@ -76,7 +76,7 @@ class RizzApp:
             with gr.Tab("Vits TTS"):
                 vits.render()
 
-            
+
             audio.render()
 
             with gr.Tab("Movie Maker"):
